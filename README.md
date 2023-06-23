@@ -7,7 +7,7 @@
 Убедитесь, что у вас установлен Go и Tarantool.
 
 Склонируйте репозиторий с помощью следующей команды:
-git clone https://github.com/your-username/task-manager.git
+git clone https://github.com/vshumeyko92/task-manager.git
 
 Перейдите в директорию проекта:
 cd task-manager
