@@ -1,0 +1,59 @@
+{{ define "index.html" }}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Task Manager</title>
+    <script src="/templates/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+<h1>Task Manager</h1>
+<div id="task-list">
+    {{ range .tasks }}
+    <p>{{ .Name }} - {{ .Status }}</p>
+    <select onchange="changeStatus({{ .ID }}, this.value)">
+        <option value="Not Started">Not Started</option>
+        <option value="In Progress">In Progress</option>
+        <option value="Completed">Completed</option>
+    </select>
+    {{ end }}
+</div>
+
+<input type="text" id="task-name">
+<button onclick="addTask()">Add Task</button>
+
+<script>
+    function addTask() {
+        var taskName = $("#task-name").val();
+        $.ajax({
+            url: "/tasks",
+            type: "POST",
+            contentType: "application/json",
+            data: JSON.stringify({
+                name: taskName
+            }),
+            success: function(response) {
+                $("#task-list").append("<p>" + response.Name + " - " + response.Status + "</p>");
+                $("#task-name").val("");
+            },
+            error: function(error) {
+                alert("Error adding task: " + error.responseText);
+            }
+        });
+    }
+
+    function changeStatus(taskID, newStatus) {
+        $.ajax({
+            url: "/tasks/" + taskID + "/status?status=" + newStatus,
+            type: "PATCH",
+            success: function() {
+                console.log("Status changed successfully");
+            },
+            error: function(error) {
+                alert("Error changing status: " + error.responseText);
+            }
+        });
+    }
+</script>
+</body>
+</html>
+{{ end }}
